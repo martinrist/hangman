@@ -36,5 +36,31 @@ randomWord wl = do
 randomWord' :: IO String
 randomWord' = gameWords >>= randomWord
 
+data Puzzle = Puzzle String [Maybe Char] [Char]
+
+instance Show Puzzle where
+    show (Puzzle _ discovered guessed) =
+        intersperse ' ' (fmap renderPuzzleChar discovered)
+        ++ " Guessed so far: " ++ guessed
+
+renderPuzzleChar :: Maybe Char -> Char
+renderPuzzleChar (Just x) = x
+renderPuzzleChar Nothing = '_'
+
+freshPuzzle :: String -> Puzzle
+freshPuzzle w =
+    let discovered = map (const Nothing) w
+        in Puzzle w discovered []
+
+charInWord :: Puzzle -> Char -> Bool
+charInWord (Puzzle w _ _) c = c `elem` w
+
+alreadyGuessed :: Puzzle -> Char -> Bool
+alreadyGuessed (Puzzle _ _ g) c = c `elem` g
+
+
+
+
 main :: IO ()
 main = undefined
+
