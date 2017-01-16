@@ -58,7 +58,14 @@ charInWord (Puzzle w _ _) c = c `elem` w
 alreadyGuessed :: Puzzle -> Char -> Bool
 alreadyGuessed (Puzzle _ _ g) c = c `elem` g
 
-
+fillInCharacter :: Puzzle -> Char -> Puzzle
+fillInCharacter (Puzzle word filledInSoFar s) c =
+    Puzzle word newFilledInSoFar (c : s)
+    where zipper guessed wordChar guessChar =
+              if wordChar == guessed
+                 then Just wordChar
+                 else guessChar
+          newFilledInSoFar = zipWith (zipper c) word filledInSoFar
 
 
 main :: IO ()
